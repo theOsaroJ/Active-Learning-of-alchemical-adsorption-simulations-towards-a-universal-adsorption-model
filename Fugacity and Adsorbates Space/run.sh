@@ -6,30 +6,25 @@
 module load python
 
 ##--------------------Deciding to cal. each mof model Rsquare by comparing the actual adorption (MLP model adsorption) to that of the GPR predictions---------------------##
-awk -F',' '{print $33}' CompleteData.csv > actual
 awk -F',' '{print $33}' mlpData.csv > mlp_loading
 
 # Set the paths
 export WORKDIR=$PWD    # $PWD - means present working directory, but you can specify any other directory path
-export PARENT=/scratch365/eosaro/Research/AlchemicalCollaboration/FESQL/Deeplearning/Normal
-export TMPDIR=/tmp/tmp_eosaroCNG_INDEX
+export PARENT=/scratch365/eosaro/Research/AlchemicalCollaboration/FESQL/Deeplearning/Normal  # this is the parent DIR hosting the MLP model
+export TMPDIR=/tmp/tmp_eosaroCNG_INDEX  # using a tmp DIR to make computation be less resource intensive
 
 # Create temp directory
 mkdir ${TMPDIR}
 cd ${TMPDIR}
 cp -r ${WORKDIR}/* ${TMPDIR}
 
-#Copying the files needed for the simulations
+#Copying the files needed for the simulations from parent DIR to tmp DIR
 cp ${PARENT}/gas_loading_prediction.h5 .
 cp ${PARENT}/model.py .
 cp ${PARENT}/training.csv .
 
-#cd RBF
-#### ------- Objective ------- ####
-## To run Alchemical OT1_1S in OPT1  MOF simulations until we get a max. relative error within 2%
-
 #Making a datafile
-data="Prior.csv"
+data="Prior.csv"  # The starting boundary prior as described in paper
 
 #Initialising a variable called one
 One=1
@@ -39,8 +34,6 @@ N_Samp=$(wc -l < Prior.csv)
 
 #Removing 1 from N_Samp, since the first row was coloumn names
 N_Samp=$[ $N_Samp - $One ]
-
-##creating error files and populating the header line at the top
 
 #populating the top row
 for ((i=1;i<=2799;i++))
@@ -55,8 +48,6 @@ do
         echo -n "${i}" >> rel_true.csv
         echo -n "${i}" >> rel.csv
 done
-
-#echo "GP-based_rel_Error,Abs_Mean_Error,RRMSE" >> mean.csv
 
 #going to the next line in these files
 echo " " >> rel_true.csv
@@ -76,49 +67,33 @@ do
         touch output
         fi
 
-        # funneling the python output to output
-        python3 GP.py > output
-        #Taking the GP relative error and sending to document
-        som=$(awk 'FNR==3 {print $1}' output)
+        #Taking test array of high GP MAE and parsing it output.txt file
+        python3 GP.py > output.txt
+
+        som=$(awk 'FNR==3 {print $1}' output.txt)
         echo $som >> cummulative.csv
 
-        ##----------------Pasting actual & predicted into its unique csv file-------------------##
-        paste actual pred.csv -d"," > r_sq.csv
+        # compiling to compute the r.square for each iteration using mlp_plot.py
         paste mlp_loading pred.csv -d"," > mlpr_sq.csv
 
-        ##---------Removing the annoying ^M character-------------###
-        sed -i "s/\r//g" r_sq.csv
+        ##---------Removing the ^M character-------------###
         sed -i "s/\r//g" mlpr_sq.csv
 
         ##---------------Computing the R_sq at this time----------###
-        python3 plot_individuals.py > r_sq.txt
         python3 mlp_plot.py > mlpr_sq.txt
-
-        rr_sq=$(cat r_sq.txt)
+        
         rrr_sq=$(cat mlpr_sq.txt)
 
-        echo $rr_sq >> gcmc_squares.csv
+        # append the r.square file 
         echo $rrr_sq >> mlp_squarees.csv
 
         #Initialising variables that will store the array Index for max. uncertainty, and the flag which tells if the code has converged or not
-        Fugacity=$(awk 'FNR==1 {print $1}' output)
-        Charge=$(awk 'FNR==1 {print $2}' output)
-        BL=$(awk 'FNR==1 {print $3}' output)
-        Epsilon=$(awk 'FNR==1 {print $4}' output)
-        Siggma=$(awk 'FNR==1 {print $5}' output)
-        Flag=$(awk 'FNR==2 {print $1}' output)
-
-        ##### -----------   TESTING    -----------
-        #echo $Index,$Max
-        #Flag=${lim#0}
-        #echo $Flag
-        #removing the output file
-        #rm output
-        #### ------------ TESTING DONE -----------
-
-        #### --------- Running a script to extract RRMSE and Rel. Error ---------- ####
-
-        #python error_estimator.py
+        Fugacity=$(awk 'FNR==1 {print $1}' output.txt)
+        Charge=$(awk 'FNR==1 {print $2}' output.txt)
+        BL=$(awk 'FNR==1 {print $3}' output.txt)
+        Epsilon=$(awk 'FNR==1 {print $4}' output.txt)
+        Siggma=$(awk 'FNR==1 {print $5}' output.txt)
+        Flag=$(awk 'FNR==2 {print $1}' output.txt)
 
         #going to the next line in these files
         echo " " >> rel_true.csv
@@ -128,25 +103,22 @@ do
         #Removing brackets in the mean.csv from rrmse output from error_estimator code
         sed -i 's/[][]//' mean.csv
         sed -i 's/[][]//' mean.csv
-
-        #### --------- Error extraction is completed  --------- ####
-
+        
         #converting Index from a string to integer
         Index=${Index#0}
-        #### -------- Creating a Variable to replace fugacity, epsilon and sigma in DL_AL.csv file ----------###
+        
+        ## -------- Creating a Variable to replace fugacity, epsilon and sigma in DL_AL.csv file. DL_AL contains the testing file to be used on the MLP model ----------##
         VVV=$(grep 'AAA' DL_AL.csv | awk -F ',' '{print $28}')
         WWW=$(grep 'BBB' DL_AL.csv | awk -F ',' '{print $29}')
         XXX=$(grep 'CCC' DL_AL.csv | awk -F ',' '{print $30}')
         YYY=$(grep 'DDD' DL_AL.csv | awk -F ',' '{print $31}')
         ZZZ=$(grep 'EEE' DL_AL.csv | awk -F ',' '{print $32}')
-        #unloading python 3.7 (the latest version) since RASPA is incompatible with Python 3.7
-        #module unload python
 
         ##Checking if the uncertainty (sigma) is lower than the limit; if not we need to do more simulations
         if [[ $Flag == $Fin ]];
         then
                 # Printing whether the code has converged or not, and the index with max. uncertainty
-                                echo "Active learning still not finished!"
+                echo "Active learning still not finished!"
                 echo $Index
 
                 #Adding the next pressure simulation point
@@ -159,7 +131,6 @@ do
                 cp gas_loading_prediction.h5 model.py training.csv $N_Samp
                 cp DL_AL.csv $N_Samp
                 cd $N_Samp
-
 
                 #changing the placeholder to Fugacity, Epsilon and Sigma from Output
                 sed -i 's/'${VVV}'/'${Fugacity}'/' DL_AL.csv
