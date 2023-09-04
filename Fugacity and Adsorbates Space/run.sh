@@ -4,9 +4,8 @@
 #$ -pe smp 1
 
 module load python
-##--------------------------Using UGE for /tmp jobs----------------------------##
 
-##--------------------Deciding to cal. each mof R_squared( take just adsorption)---------------------##
+##--------------------Deciding to cal. each mof model Rsquare by comparing the actual adorption (MLP model adsorption) to that of the GPR predictions---------------------##
 awk -F',' '{print $33}' CompleteData.csv > actual
 awk -F',' '{print $33}' mlpData.csv > mlp_loading
 
@@ -16,7 +15,6 @@ export PARENT=/scratch365/eosaro/Research/AlchemicalCollaboration/FESQL/Deeplear
 export TMPDIR=/tmp/tmp_eosaroCNG_INDEX
 
 # Create temp directory
-#rm -rf tmp/tmp_eosaro_test
 mkdir ${TMPDIR}
 cd ${TMPDIR}
 cp -r ${WORKDIR}/* ${TMPDIR}
