@@ -19,7 +19,7 @@ cd ${TMPDIR}
 cp -r ${WORKDIR}/* ${TMPDIR}
 
 #Copying the files needed for the simulations from parent DIR to tmp DIR
-cp ${PARENT}/gasloadingprediction.h5 .
+cp ${PARENT}/gas_loading_prediction.h5 .
 cp ${PARENT}/model.py .
 cp ${PARENT}/training.csv .
 
