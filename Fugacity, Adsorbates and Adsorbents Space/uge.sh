@@ -3,10 +3,10 @@
 #$ -pe smp 1
 #$ -N AL
 
-for ((n=1 ; n<=100; n++));
+for ((n=1 ; n<=50; n++));
 do
 
-for i in $(cat list.txt)
+for i in $(cat bag.txt)
 do
 
 cd $i
