@@ -80,7 +80,7 @@ do
         sed -i "s/\r//g" mlpr_sq.csv
 
         ##---------------Computing the R_sq at this time----------###
-        python3 mlp_plot.py > mlpr_sq.txt
+        python3 mlpplot.py > mlpr_sq.txt
         
         rrr_sq=$(cat mlpr_sq.txt)
 
