@@ -15,3 +15,7 @@ ${\textbf{model.py}}$ - Python file to make predictions on test arrays with maxi
 
 ${\textbf{training.csv}}$ -  Training dataset used to train the original MLP model. This contain the adsorption of 1800 MOFs for different alchemical molecules.
 
+Steps:
+1. Have all the MOFs in mof.txt
+2. Run uge.sh to execute run.sh based on computational resources to be used
+3. Make sure to have mlpData.csv in each 'MOF'/RQ directory. mlpData.csv is the MOF functional group densities, structural properties and alchemical adsorption values for each MOF. This is generated using the MLP model for all the test data to be navigated via the GPR. An example of the mlpData.csv for OPT_acs_sym_7_mc_4_1B_2Br is in this directory as mlpData.csv. 
