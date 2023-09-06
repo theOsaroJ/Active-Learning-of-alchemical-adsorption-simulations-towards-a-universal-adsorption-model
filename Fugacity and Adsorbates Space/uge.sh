@@ -8,8 +8,8 @@
 for d in $(cat mof.txt)
 do
 cd $d
-mkdir KernelCombination
-cd KernelCombination
+mkdir RQ
+cd RQ
 
 cp ../../GP.py .
 cp ../../run.sh .
