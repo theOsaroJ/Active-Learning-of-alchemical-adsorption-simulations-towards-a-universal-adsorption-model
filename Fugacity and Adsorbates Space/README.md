@@ -9,8 +9,9 @@ ${\textbf{mlpplot.py}}$ - This is the python file used to compute with the ${R^2
 
 ${\textbf{run.sh}}$ - This is the algorithm that carries out the Active Learning process ( see figure above) for each MOF in the mofs.txt file.
 
-${\textbf{\texttt{gas\_loading\_prediction.h5}}}$ - The original Deep learning MLP model used as a surrogate for the GCMC simulations.
+${\textbf{\texttt{gasloadingprediction.h5}}}$ - The original Deep learning MLP model used as a surrogate for the GCMC simulations.
 
 ${\textbf{model.py}}$ - Python file to make predictions on test arrays with maximum GP MAE during an AL iteration
 
 ${\textbf{training.csv}}$ -  Training dataset used to train the original MLP model. This contain the adsorption of 1800 MOFs for different alchemical molecules.
+
