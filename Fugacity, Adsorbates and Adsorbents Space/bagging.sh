@@ -1,6 +1,6 @@
 #!/bin/bash
 #$ -q hpc@@colon
-#$ -pe smp 24
+#$ -pe smp 1
 #$ -N bagging
 
 for i in $(cat mof.txt)
@@ -9,12 +9,12 @@ cd $i
 
 rm sfile_*
 
-cp ../edit.py .
+cp ../bagging.py .
 
 cp *.csv data.csv
 sed -i '1, 1d' data.csv
 
-python3 edit.py
+python3 bagging.py
 
 cd ..
 done
