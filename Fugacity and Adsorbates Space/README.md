@@ -1,4 +1,5 @@
-![Picture1](https://github.com/theOsaroJ/Active-Learning-of-alchemical-adsorption-simulations-towards-a-universal-adsorption-model/assets/64130121/cac7cc09-cd9c-4965-9789-3ad1e563df34)
+
+![Final AL procedure](https://github.com/theOsaroJ/Active-Learning-of-alchemical-adsorption-simulations-towards-a-universal-adsorption-model/assets/64130121/49de8cf1-e07b-4a4e-8edd-93c8dc189780)
 
 This folder is for the chapter where we only navigate the adsorbate space represented by their effective force field potentials (epsilon, sigma, bond-length, and charge), and fugacity.
 
