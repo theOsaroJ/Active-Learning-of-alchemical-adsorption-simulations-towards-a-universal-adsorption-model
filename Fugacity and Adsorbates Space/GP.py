@@ -14,15 +14,9 @@ from gpflow.utilities import print_summary
 warnings.filterwarnings(action='ignore')
 import random
 
-#importing the ML libraries
-# from sklearn.gaussian_process import GaussianProcessRegressor
-# from sklearn.gaussian_process.kernels import RBF, RationalQuadratic, WhiteKernel,Matern
-# from sklearn.gaussian_process.kernels import ConstantKernel as C
-
 #Reading the dataset
 df = pd.read_csv('Prior.csv',delimiter=',')
-df2 = pd.read_csv('CompleteData.csv',delimiter=',')
-df3= pd.read_csv('TestData.csv')
+df2 = pd.read_csv('TestData.csv')
 
 #Reading the data
 fu = df.iloc[:,0].values
@@ -32,21 +26,13 @@ ep = df.iloc[:,3].values
 si = df.iloc[:,4].values
 y = df.iloc[:,5].values
 
-#from complete-original dataset
-fu2 = df2.iloc[:,27].values
-ch2= df2.iloc[:,28].values
-bl2= df2.iloc[:,29].values
-ep2 = df2.iloc[:,30].values
-si2 = df2.iloc[:,31].values
-y2 = df2.iloc[:,32].values
-
 #from testing dataset
-fug_test= df3.iloc[:,0].values
+fug_test= df2.iloc[:,0].values
 fug_test= fug_test/1e5   #Pa to Bar
-ch_test=  df3.iloc[:,1].values
-bl_test=  df3.iloc[:,2].values
-eps_test= df3.iloc[:,3].values
-sig_test= df3.iloc[:,4].values
+ch_test=  df2.iloc[:,1].values
+bl_test=  df2.iloc[:,2].values
+eps_test= df2.iloc[:,3].values
+sig_test= df2.iloc[:,4].values
 
 #Replacing y if some y value in zero
 for i in range(len(y)):
@@ -135,16 +121,15 @@ bl_test= (bl_test - bl_m)/bl_std
 eps_test = (eps_test - ep_m)/ep_std
 sig_test= (sig_test - si_m)/si_std
 
-# #Initializing scaled down training and prediction set
+##Initializing scaled down training and prediction set
 x_s= np.vstack((fu_s.flatten(),ch_s.flatten(), bl_s.flatten(), ep_s.flatten(),si_s.flatten())).T
 X_test = np.vstack((fug_test.flatten(),ch_test.flatten(),bl_test.flatten(),eps_test.flatten(), sig_test.flatten())).T
-n_params= 5
+
 kernel = gpflow.kernels.RationalQuadratic()
 model = gpflow.models.GPR(
         data=(x_s,y_s.reshape(-1, 1)),
         kernel=kernel,
         noise_variance=10**-5)
-
 
 gpflow.utilities.set_trainable(model.likelihood.variance,False)
 
@@ -183,7 +168,7 @@ for i in range(len(sigma)):
 abs_m = np.mean(abs_error)
 
 #define the limit for uncertainty
-lim = 0.05
+lim = 0.05 #mol/kg
 Max = abs_m
 index = np.argmax(abs_error)
 
