@@ -5,11 +5,11 @@
 
 ###----------------This is to create folder with MOF name, CompleteData.csv and Prior.csv----------###
 ##Removing exponential
-sed -i 's/1e+05/100000/' Todo_Complete_training.csv
-sed -i 's/5e+05/500000/' Todo_Complete_training.csv
-sed -i 's/1e+06/1000000/' Todo_Complete_training.csv
-sed -i 's/5e+06/1000000/' Todo_Complete_training.csv
-sed -i 's/1e+07/10000000/' Todo_Complete_training.csv
+sed -i 's/1e+05/100000/' training.csv
+sed -i 's/5e+05/500000/' training.csv
+sed -i 's/1e+06/1000000/' training.csv
+sed -i 's/5e+06/1000000/' training.csv
+sed -i 's/1e+07/10000000/' training.csv
 
 
 #Splitting the data by MOF using the split.py
