@@ -87,25 +87,24 @@ fug_test = np.log10(fug_test)
 eps_test = np.log10(eps_test)
 sig_test= np.log10(sig_test)
 
-#Extracting the mean and std. dev for fug_test
-fu_m = np.mean(fug_test)
-fu_std = np.std(fug_test,ddof=1)
+#Extracting the mean and std. dev for fug
+fu_m = np.mean(fu)
+fu_std = np.std(fu,ddof=1)
 
-#Extracting the mean and std. dev for ch_test
-ch_m = np.mean(ch_test)
-ch_std = np.std(ch_test,ddof=1)
+#Extracting the mean and std. dev for ch
+ch_std = np.std(ch,ddof=1)
 
-#Extracting the mean and std. dev for bl_test
-bl_m = np.mean(bl_test)
-bl_std = np.std(bl_test,ddof=1)
+#Extracting the mean and std. dev for bl
+bl_m = np.mean(bl)
+bl_std = np.std(bl,ddof=1)
 
-#Extracting the mean and std. dev for ep_test
-ep_m = np.mean(eps_test)
-ep_std = np.std(eps_test,ddof=1)
+#Extracting the mean and std. dev for ep
+ep_m = np.mean(ep)
+ep_std = np.std(ep,ddof=1)
 
-#Extracting the mean and std. dev for sig_test
-si_m= np.mean(sig_test)
-si_std= np.std(sig_test,ddof=1)
+#Extracting the mean and std. dev for si
+si_m= np.mean(si)
+si_std= np.std(si,ddof=1)
 
 #Standardising fugacity,charge,bondlen,eps and sig in log-space
 fu_s = (fu - fu_m)/fu_std
