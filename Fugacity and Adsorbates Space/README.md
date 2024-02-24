@@ -20,3 +20,6 @@ Steps:
 1. Have all the MOFs in mof.txt
 2. Run uge.sh to execute run.sh based on computational resources to be used
 3. Make sure to have mlpData.csv and DL_AL.csv in each 'MOF'/RQ directory. mlpData.csv is the MOF functional group densities, structural properties and alchemical adsorption values for each MOF. This is generated using the MLP model for all the test data to be navigated via the GPR. An example of the mlpData.csv for OPT_acs_sym_7_mc_4_1B_2Br is in this directory as mlpData.csv. The DL_AL.csv file contains the mof functional group densities and structural properties, with placeholders to be replaced by the fugacity, bond_length, charge, epsilon and sigma test array of the highest GP absoluter error.
+
+
+The folder called NeuralNetwork contains a zip file that contains the New MLP model and the compiled training data collected from the 1800 MOFs models.
